@@ -29,10 +29,17 @@ module.exports = {
         loader: 'ts-loader'
       },
       {
-        test: /\.scss$/,
+        test: /\.module.scss$/,
         exclude: /node_modules/,
-        use: ['style-loader', 'css-loader', 'sass-loader']
-      }
+        use: ['style-loader', {
+          loader: 'css-loader',
+          options: {
+            modules: {
+              localIdentName: "[name]__[local]-[hash:base64:6]",
+            }
+          }
+        }, 'sass-loader']
+      },
     ]
   },
 

@@ -1,6 +1,6 @@
 import * as React from 'react'
-import axios from 'axios'
-import './index.scss'
+import axios from '../../utils/axios'
+import Styles from './index.module.scss'
 
 export default class SignUpPage extends React.Component {
   state = {
@@ -22,7 +22,7 @@ export default class SignUpPage extends React.Component {
     const { userName, passWord } = this.state
     e.preventDefault()
     const postData = { userName, passWord }
-    axios.post('http://localhost:2333/signUp', postData).then((res) => {
+    axios.post('/signUp', postData).then((res) => {
       console.log(res)
     }).catch(console.error)
   }
@@ -30,10 +30,10 @@ export default class SignUpPage extends React.Component {
   render() {
     const { userName, passWord } = this.state
     return (
-      <section>
+      <section className={Styles.section}>
         <label>用户名</label><input type="text" value={userName} onChange={this.handleChangeUserName} />
         <label>密码</label><input type="password" value={passWord} onChange={this.handleChangePassword} />
-        <input type="submit" onClick={this.handleSubmit} />
+        <button type="submit" onClick={this.handleSubmit}>注册</button>
       </section>
     )
   }
