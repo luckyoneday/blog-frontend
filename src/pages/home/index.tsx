@@ -7,7 +7,9 @@ const { useEffect, useState } = React
 
 export default function HomePage(props: any) {
   useEffect(() => {
-    axios.get("/userInfo").then(res => {})
+    axios.get("/userInfo").then(res => {
+      console.log(res)
+    })
   }, [])
 
   return <section className={Styles.formSection}>这是home页</section>

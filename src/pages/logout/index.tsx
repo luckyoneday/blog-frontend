@@ -5,7 +5,7 @@ export default class LoginPage extends React.Component {
   handleLogout = (e: React.MouseEvent) => {
     e.preventDefault()
     axios
-      .post("/logout")
+      .get("/logout")
       .then(res => {
         console.log(res)
       })
