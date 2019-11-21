@@ -1,8 +1,11 @@
-import * as React from 'react'
-import { Switch, Route, BrowserRouter } from 'react-router-dom'
-import Login from './login'
-import Logout from './logout'
-import SignUp from './signUp'
+import * as React from "react"
+import { Switch, Route, BrowserRouter, Redirect } from "react-router-dom"
+import Login from "./login"
+import Logout from "./logout"
+import SignUp from "./signUp"
+import Home from "./home"
+import "antd/dist/antd.css"
+import "./App.css"
 
 export default function App() {
   return (
@@ -11,13 +14,11 @@ export default function App() {
         <Switch>
           <Route path="/login" component={Login}></Route>
           <Route path="/signUp" component={SignUp}></Route>
-          <Route path='/logout' component={Logout}></Route>
+          <Route path="/logout" component={Logout}></Route>
+          <Route path="/home" component={Home}></Route>
+          <Redirect to="/login" />
         </Switch>
       </div>
     </BrowserRouter>
   )
-}
-
-function Index() {
-  return (<div>首页</div>)
 }

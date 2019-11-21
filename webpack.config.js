@@ -34,11 +34,33 @@ module.exports = {
         use: ['style-loader', {
           loader: 'css-loader',
           options: {
+            importLoaders: 1,
             modules: {
               localIdentName: "[name]__[local]-[hash:base64:6]",
             }
           }
-        }, 'sass-loader']
+        }, {
+            loader: 'postcss-loader',
+            options: {
+              ident: 'postcss',
+              plugins: [
+                require("autoprefixer")
+              ]
+            }
+          }, 'sass-loader']
+      },
+      {
+        test: /\.css$/,
+        include: [/node_modules/, path.resolve(__dirname, 'src')],
+        use: ['style-loader', 'css-loader', {
+          loader: 'postcss-loader',
+          options: {
+            ident: 'postcss',
+            plugins: [
+              require("autoprefixer")
+            ]
+          }
+        }]
       },
     ]
   },

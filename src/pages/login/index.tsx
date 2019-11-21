@@ -1,42 +1,68 @@
-import * as React from 'react'
-import axios from '../../utils/axios'
-import Styles from './index.module.scss'
+import * as React from "react"
+import { Form, Icon, Input, Button } from "antd"
+import { FormComponentProps } from "antd/lib/form/Form"
+import { Link } from "react-router-dom"
+import axios from "../../utils/axios"
 
-export default class LoginPage extends React.Component {
-  state = {
-    userName: '',
-    passWord: ''
-  }
+import Styles from "./index.module.scss"
 
-  handleChangeUserName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    this.setState({ userName: value })
-  }
+interface IFormProps {
+  handleSubmit: (e: React.MouseEvent) => void
+}
 
-  handleChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    this.setState({ passWord: value })
-  }
-
+class LoginPage extends React.Component<IFormProps & FormComponentProps> {
   handleSubmit = (e: React.MouseEvent) => {
-    const { userName, passWord } = this.state
     e.preventDefault()
-    const postData = { userName, passWord }
-    axios.post('/login', postData).then((res) => {
-      console.log(res)
-    }).catch(console.error)
-    console.log(this.state.userName, this.state.passWord)
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        axios
+          .post("/login", values)
+          .then(res => {
+            window && window.location.replace("/home")
+          })
+          .catch(console.error)
+      }
+    })
   }
 
   render() {
-    const { userName, passWord } = this.state
+    const { getFieldDecorator } = this.props.form
     return (
-      <section className={Styles.section}>
-        <label>用户名</label><input type="text" value={userName} onChange={this.handleChangeUserName} />
-        <label>密码</label><input type="password" value={passWord} onChange={this.handleChangePassword} />
-        <button type="submit" onClick={this.handleSubmit}>登录</button>
+      <section className={Styles.formSection}>
+        <Form onSubmit={this.handleSubmit} className="login-form">
+          <Form.Item>
+            {getFieldDecorator("userName", {
+              rules: [{ required: true, message: "请输入用户名!" }]
+            })(
+              <Input
+                prefix={<Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />}
+                placeholder="用户名"
+              />
+            )}
+          </Form.Item>
+          <Form.Item>
+            {getFieldDecorator("passWord", {
+              rules: [{ required: true, message: "请输入密码!" }]
+            })(
+              <Input
+                prefix={<Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />}
+                type="password"
+                placeholder="密码"
+              />
+            )}
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit" className="login-form-button">
+              登录
+            </Button>
+            <span className={Styles.goSignUp}>
+              或者点击<Link to="/signUp">注册</Link>
+            </span>
+          </Form.Item>
+        </Form>
       </section>
     )
   }
 }
 
+export default Form.create({ name: "normal_login" })(LoginPage)
