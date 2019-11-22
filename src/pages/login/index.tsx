@@ -1,8 +1,9 @@
 import * as React from "react"
-import { Form, Icon, Input, Button } from "antd"
+import axios, { AxiosResponse, AxiosError } from "axios"
+import { Form, Icon, Input, Button, message } from "antd"
 import { FormComponentProps } from "antd/lib/form/Form"
 import { Link } from "react-router-dom"
-import axios from "../../utils/axios"
+import { ResponseProps } from "../../interface"
 
 import Styles from "./index.module.scss"
 
@@ -17,10 +18,19 @@ class LoginPage extends React.Component<IFormProps & FormComponentProps> {
       if (!err) {
         axios
           .post("/login", values)
-          .then(res => {
-            window && window.location.replace("/home")
+          .then((res: AxiosResponse<ResponseProps>) => {
+            if (res.data.success) {
+              message.success("登陆成功", 1, () => {
+                window && window.location.replace("/home")
+              })
+            }
           })
-          .catch(console.error)
+          .catch((error: ResponseProps) => {
+            message.error(error.message + "请重新登录", 1, () => {
+              // TODO: 失败后只是清空表单，不用reload
+              window && window.location.reload()
+            })
+          })
       }
     })
   }
