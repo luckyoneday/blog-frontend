@@ -3,10 +3,10 @@ import Styles from "./index.module.scss"
 
 const { useEffect, useState } = React
 
-export default function HomePage(props: any) {
+export default function UserPage(props: any) {
   return (
     <section className={Styles.formSection}>
-      <div>这是首页</div>
+      <div>这是用户页面</div>
     </section>
   )
 }

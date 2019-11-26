@@ -1,74 +1,85 @@
-const path = require('path')
-const webpack = require('webpack')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const path = require("path")
+const webpack = require("webpack")
+const HtmlWebpackPlugin = require("html-webpack-plugin")
+const { CleanWebpackPlugin } = require("clean-webpack-plugin")
 
 module.exports = {
-  mode: 'development',
-  entry: { main: './src/index.tsx' },
+  mode: "development",
+  entry: { main: "./src/index.tsx" },
   output: {
-    publicPath: '/',
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js'
+    publicPath: "/",
+    path: path.resolve(__dirname, "dist"),
+    filename: "bundle.js"
   },
   resolve: {
-    extensions: [".ts", ".tsx", ".js", ".jsx", ".json"]
+    extensions: [".ts", ".tsx", ".js", ".jsx", ".json"],
+    alias: {
+      "@pages": path.resolve(__dirname, "src/pages"),
+      "@utils": path.resolve(__dirname, "src/utils"),
+      "@interface": path.resolve(__dirname, "src/interface"),
+      "@api": path.resolve(__dirname, "src/api")
+    }
   },
 
-  devtool: 'inline-source-map',
+  devtool: "inline-source-map",
   devServer: {
     hot: true,
     historyApiFallback: true,
-    contentBase: './dist',
+    contentBase: "./dist"
   },
   module: {
     rules: [
       {
         test: /\.tsx?$/,
         exclude: /node_modules/,
-        loader: 'ts-loader'
+        loader: "ts-loader"
       },
       {
         test: /\.module.scss$/,
         exclude: /node_modules/,
-        use: ['style-loader', {
-          loader: 'css-loader',
-          options: {
-            importLoaders: 1,
-            modules: {
-              localIdentName: "[name]__[local]-[hash:base64:6]",
-            }
-          }
-        }, {
-            loader: 'postcss-loader',
+        use: [
+          "style-loader",
+          {
+            loader: "css-loader",
             options: {
-              ident: 'postcss',
-              plugins: [
-                require("autoprefixer")
-              ]
+              importLoaders: 1,
+              modules: {
+                localIdentName: "[name]__[local]-[hash:base64:6]"
+              }
             }
-          }, 'sass-loader']
+          },
+          {
+            loader: "postcss-loader",
+            options: {
+              ident: "postcss",
+              plugins: [require("autoprefixer")]
+            }
+          },
+          "sass-loader"
+        ]
       },
       {
         test: /\.css$/,
-        include: [/node_modules/, path.resolve(__dirname, 'src')],
-        use: ['style-loader', 'css-loader', {
-          loader: 'postcss-loader',
-          options: {
-            ident: 'postcss',
-            plugins: [
-              require("autoprefixer")
-            ]
+        include: [/node_modules/, path.resolve(__dirname, "src")],
+        use: [
+          "style-loader",
+          "css-loader",
+          {
+            loader: "postcss-loader",
+            options: {
+              ident: "postcss",
+              plugins: [require("autoprefixer")]
+            }
           }
-        }]
-      },
+        ]
+      }
     ]
   },
 
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      template: './public/index.html'
+      template: "./public/index.html"
     }),
     new webpack.HotModuleReplacementPlugin()
   ]
