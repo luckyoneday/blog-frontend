@@ -1,5 +1,11 @@
 import * as React from "react"
 import * as ReactDOM from "react-dom"
-import App from "./pages/App"
+import { BrowserRouter } from "react-router-dom"
+import App from "./App"
 
-ReactDOM.render(<App />, document.getElementById("root"))
+ReactDOM.hydrate(
+  <BrowserRouter>
+    <App staticContext={null} />
+  </BrowserRouter>,
+  document.getElementById("root")
+)

@@ -1,2 +1,4 @@
-declare module "*.module.scss"
-declare module "antd"
+declare module "*.scss" {
+  const content: { [className: string]: string }
+  export = content
+}

@@ -1,18 +1,20 @@
 import * as React from "react"
-import { Layout, Menu, message, Modal } from "antd"
-import { Link } from "react-router-dom"
+import { Menu, message, Modal } from "antd"
+import { Link, useLocation } from "react-router-dom"
 import { ClickParam } from "antd/lib/menu"
 import axios from "@utils/axios"
 import Api from "@api/index"
 import { ResponseProps } from "@interface/index"
 import FormModal from "../login"
+import WithStylesHoc from "../withStylesHOC"
 import Styles from "./index.module.scss"
 
-const { Header } = Layout
 const { useEffect, useState } = React
 
-export default function NavComponent(props: any) {
-  const [route, setRoute] = useState("home")
+function NavComponent() {
+  let location = useLocation().pathname
+  if (location === "/") location = "/home"
+  const [route, setRoute] = useState([location])
   const [modalShow, setModalShow] = useState(false)
   const [modalType, setModalType] = useState("login")
   const [user, setUser] = useState({ userId: 0, userName: "", isLogin: false })
@@ -48,59 +50,59 @@ export default function NavComponent(props: any) {
   }
 
   return (
-    <Header className={Styles.header}>
-      <div className={Styles.logo}></div>
-      <Menu
-        theme="dark"
-        mode="horizontal"
-        selectedKeys={route}
-        style={{ lineHeight: "64px" }}
-        onClick={(e: ClickParam) => {
-          setRoute(e.key)
-        }}
-      >
-        <Menu.Item key="home">
-          <Link to="/">首页</Link>
-        </Menu.Item>
-        {user.isLogin ? (
-          <Menu.Item key="create">
-            <Link to="/create">写文章</Link>
+    <header className={Styles.header}>
+      <div className={Styles.middleBlock}>
+        <div className={Styles.logo}>oneday</div>
+        <Menu
+          mode="horizontal"
+          selectedKeys={route}
+          className={Styles.menu}
+          onClick={(e: ClickParam) => {
+            setRoute([e.key])
+          }}
+        >
+          <Menu.Item key="/home">
+            <Link to="/">首页</Link>
           </Menu.Item>
-        ) : null}
-        {user.isLogin ? (
-          <Menu.SubMenu title="我的">
-            <Menu.Item key="userIndex">我的主页</Menu.Item>
-            <Menu.Item key="logout" onClick={handleLogout}>
-              登出
-            </Menu.Item>
-          </Menu.SubMenu>
-        ) : (
-          <>
-            <span
-              onClick={() => {
-                setModalShow(true)
-                setModalType("login")
-              }}
-            >
-              登录
-            </span>
-            <span
-              onClick={() => {
-                setModalShow(true)
-                setModalType("signUp")
-              }}
-            >
-              注册
-            </span>
-          </>
-        )}
-      </Menu>
+          {user.isLogin ? (
+            <Menu.SubMenu title="我的">
+              <Menu.Item key="/user">
+                <Link to="/user">我的主页</Link>
+              </Menu.Item>
+              <Menu.Item key="logout" onClick={handleLogout}>
+                登出
+              </Menu.Item>
+            </Menu.SubMenu>
+          ) : (
+            <>
+              <span
+                onClick={() => {
+                  setModalShow(true)
+                  setModalType("login")
+                }}
+              >
+                登录
+              </span>
+              <span
+                onClick={() => {
+                  setModalShow(true)
+                  setModalType("signUp")
+                }}
+              >
+                注册
+              </span>
+            </>
+          )}
+        </Menu>
+      </div>
       <FormModal
         modalType={modalType}
         visible={modalShow}
         onHide={() => setModalShow(false)}
         onChangeModalType={(value: string) => setModalType(value)}
       />
-    </Header>
+    </header>
   )
 }
+
+export default WithStylesHoc(NavComponent, Styles)

@@ -3,25 +3,23 @@ import { AxiosResponse } from "axios"
 import { ResponseProps } from "@interface/index"
 import Api from "@api/index"
 import { Form, Icon, Input, Button, message, Modal } from "antd"
-import { FormComponentProps } from "antd/lib/form/Form"
-
+import { FormComponentProps } from "antd/lib/form"
 import Styles from "./index.module.scss"
 
-interface IFormProps {
-  handleSubmit: (e: React.MouseEvent) => void
+interface IFormProps extends FormComponentProps {
   visible: boolean
   modalType: string
   onHide: () => void
   onChangeModalType: (value: string) => void
 }
 
-class LoginPage extends React.Component<IFormProps & FormComponentProps> {
-  componentDidUpdate(nextProp: IFormProps) {
-    if (this.props.modalType !== nextProp.modalType) {
+class LoginPage extends React.Component<IFormProps> {
+  componentDidUpdate(prevProps: IFormProps) {
+    if (this.props.modalType !== prevProps.modalType) {
       this.props.form.resetFields()
     }
   }
-  handleSubmit = (e: React.MouseEvent) => {
+  handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     const { modalType, onHide } = this.props
     const methodName = modalType === "login" ? "login" : "signUp"
     e.preventDefault()
@@ -106,4 +104,5 @@ class LoginPage extends React.Component<IFormProps & FormComponentProps> {
   }
 }
 
-export default Form.create({ name: "normal_login" })(LoginPage)
+const WrappedForm = Form.create<IFormProps>({ name: "normal_login" })(LoginPage)
+export default WrappedForm
