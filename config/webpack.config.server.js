@@ -18,7 +18,6 @@ module.exports = merge(baseConfig, {
       {
         test: /\.module.scss$/,
         exclude: /node_modules/,
-        // loader: "ignore-loader"
         use: [
           "isomorphic-style-loader",
           {
@@ -42,19 +41,7 @@ module.exports = merge(baseConfig, {
       },
       {
         test: /\.css$/,
-        include: [/node_modules/, path.resolve(__dirname, "../src")],
-        // loader: "ignore-loader"
-        use: [
-          "isomorphic-style-loader",
-          "css-loader",
-          {
-            loader: "postcss-loader",
-            options: {
-              ident: "postcss",
-              plugins: [require("autoprefixer")]
-            }
-          }
-        ]
+        loader: "ignore-loader"
       }
     ]
   }

@@ -10,7 +10,6 @@ import * as process from "process"
 import App from "../src/App"
 
 const template = fs.readFileSync(process.cwd() + "/dist/index.html", "utf-8")
-const cssFiles = fs.readFileSync(process.cwd() + "/dist/main.css", "utf-8")
 
 const PORT = 4555
 const app = new Koa()
@@ -27,7 +26,7 @@ router.get("*", async (ctx: Koa.Context) => {
   const cssStr = context.css.length ? context.css.join("\n") : ""
   ctx.body = template
     .replace("<!-- this will be replaced by render  -->", content)
-    .replace("/* this will be replaced by css */", cssStr + cssFiles)
+    .replace("/* this will be replaced by css */", cssStr)
   ctx.type = "html"
 })
 

@@ -45,31 +45,7 @@ module.exports = merge(baseConfig, {
       {
         test: /\.module.scss$/,
         exclude: /node_modules/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-            options: {
-              publicPath: "/public/"
-            }
-          },
-          {
-            loader: "css-loader",
-            options: {
-              importLoaders: 1,
-              modules: {
-                localIdentName: "[name]__[local]-[hash:base64:6]"
-              }
-            }
-          },
-          {
-            loader: "postcss-loader",
-            options: {
-              ident: "postcss",
-              plugins: [require("autoprefixer")]
-            }
-          },
-          "sass-loader"
-        ]
+        loader: "ignore-loader"
       }
     ]
   },
