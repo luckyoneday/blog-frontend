@@ -2,14 +2,13 @@ import * as React from "react"
 import { StaticRouterContext, Redirect } from "react-router"
 import { Switch, Route } from "react-router-dom"
 import Nav from "./pages/components/nav"
-import Home from "./pages/home"
-import Create from "./pages/create"
-import User from "./pages/user"
+import routes from "./routes"
 import "./App.css"
 
 interface AppProps {
   staticContext: StaticRouterContext | null
 }
+
 export default function App(props: AppProps) {
   return (
     <>
@@ -18,9 +17,9 @@ export default function App(props: AppProps) {
       </div>
       <div id="oneday-blog-body">
         <Switch>
-          <Route path="/create" component={Create}></Route>
-          <Route path="/user" component={User}></Route>
-          <Route path="/home" component={Home}></Route>
+          {routes.map((item, index) => (
+            <Route path={item.path} component={item.component} key={index}></Route>
+          ))}
           <Redirect to="/home" />
         </Switch>
       </div>

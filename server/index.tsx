@@ -9,6 +9,10 @@ import * as fs from "fs"
 import * as process from "process"
 import App from "../src/App"
 
+interface ContextProps extends StaticRouterContext {
+  css: Array<any>
+}
+
 const template = fs.readFileSync(process.cwd() + "/dist/index.html", "utf-8")
 
 const PORT = 4555
@@ -16,12 +20,16 @@ const app = new Koa()
 const router = new Router()
 
 router.get("*", async (ctx: Koa.Context) => {
-  const context = { css: [] }
+  const context: ContextProps = { css: [] }
   const content = ReactDOMServer.renderToString(
-    <StaticRouter context={context as StaticRouterContext} location={ctx.request.url}>
-      <App staticContext={context as StaticRouterContext} />
+    <StaticRouter context={context} location={ctx.request.url}>
+      <App staticContext={context} />
     </StaticRouter>
   )
+
+  if (context.action === "REPLACE" && context.url) {
+    ctx.response.redirect(context.url)
+  }
 
   const cssStr = context.css.length ? context.css.join("\n") : ""
   ctx.body = template
