@@ -18,7 +18,12 @@ export default function App(props: AppProps) {
       <div id="oneday-blog-body">
         <Switch>
           {routes.map((item, index) => (
-            <Route path={item.path} component={item.component} key={index}></Route>
+            <Route
+              path={item.path}
+              component={item.component}
+              key={index}
+              exact={item.exact}
+            ></Route>
           ))}
           <Redirect to="/home" />
         </Switch>

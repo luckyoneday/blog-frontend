@@ -1,4 +1,5 @@
 const path = require("path")
+const process = require("process")
 const webpack = require("webpack")
 const merge = require("webpack-merge")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
@@ -7,19 +8,17 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin")
 
 const baseConfig = require("./webpack.config.base")
 
-module.exports = merge(baseConfig, {
+// 判断是不是生产环境
+const isProd = process.env.NODE_ENV === "production"
+
+const config = merge(baseConfig, {
   entry: "./src/index.tsx",
+  mode: process.env.NODE_ENV,
   target: "web",
   output: {
     path: path.resolve(__dirname, "../dist"),
     filename: "[name]_[hash].js"
   },
-  devtool: "cheap-inline-source-map",
-  // devServer: {
-  //   hot: true,
-  //   historyApiFallback: true,
-  //   contentBase: "./dist"
-  // },
   module: {
     rules: [
       {
@@ -27,10 +26,7 @@ module.exports = merge(baseConfig, {
         include: ["/node_modules/antd/*", path.resolve(__dirname, "../src")],
         use: [
           {
-            loader: MiniCssExtractPlugin.loader,
-            options: {
-              publicPath: "/public/"
-            }
+            loader: MiniCssExtractPlugin.loader
           },
           "css-loader",
           {
@@ -41,11 +37,6 @@ module.exports = merge(baseConfig, {
             }
           }
         ]
-      },
-      {
-        test: /\.module.scss$/,
-        exclude: /node_modules/,
-        loader: "ignore-loader"
       }
     ]
   },
@@ -58,7 +49,53 @@ module.exports = merge(baseConfig, {
     new HtmlWebpackPlugin({
       template: "./public/index.html",
       favicon: "./public/favicon.ico"
-    }),
-    new webpack.HotModuleReplacementPlugin()
+    })
   ]
 })
+
+if (isProd) {
+  config.module.rules.push({
+    test: /\.module.scss$/,
+    exclude: /node_modules/,
+    loader: "ignore-loader"
+  })
+} else {
+  config.entry = {
+    app: ["react-hot-loader/patch", "./src/index.tsx"]
+  }
+  config.devtool = "cheap-inline-source-map"
+  config.devServer = {
+    hot: true,
+    contentBase: "./dist",
+    overlay: {
+      errors: true
+    }
+  }
+  config.module.rules.push({
+    test: /\.module.scss$/,
+    exclude: /node_modules/,
+    use: [
+      "style-loader",
+      {
+        loader: "css-loader",
+        options: {
+          importLoaders: 1,
+          modules: {
+            localIdentName: "[name]__[local]-[hash:base64:6]"
+          }
+        }
+      },
+      {
+        loader: "postcss-loader",
+        options: {
+          ident: "postcss",
+          plugins: [require("autoprefixer")]
+        }
+      },
+      "sass-loader"
+    ]
+  })
+  config.plugins.push(new webpack.HotModuleReplacementPlugin())
+}
+
+module.exports = config
