@@ -7,9 +7,10 @@
     "build:client": "cross-env NODE_ENV=production webpack --config config/webpack.config.client.js",
     "build:server": "cross-env NODE_ENV=production webpack --config config/webpack.config.server.js",
     "build": "rimraf dist && npm run build:client && npm run build:server",
-    "dev:server": "cross-env NODE_ENV=development ./node_modules/.bin/ts-node ./server/index.tsx",
+    "dev:server": "rimraf dist/server.bundle.js && cross-env NODE_ENV=development webpack --config ./config/webpack.config.server.js --watch ",
     "dev:client": "cross-env NODE_ENV=development webpack-dev-server --config ./config/webpack.config.client.js",
-    "start": "npm run build && cross-env NODE_ENV=production node dist/server.bundle.js"
+    "dev": "npm run dev:client && npm run dev:server",
+    "start": "npm run build && node dist/server.bundle.js"
   },
   "keywords": [
     "react",
@@ -29,7 +30,8 @@
     "koa-static": "^5.0.0",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
-    "react-router-dom": "^5.1.2"
+    "react-router-dom": "^5.1.2",
+    "wangeditor": "^4.5.0"
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",
@@ -46,10 +48,13 @@
     "cross-env": "^6.0.3",
     "css-loader": "^3.2.0",
     "eslint-plugin-react-hooks": "^2.3.0",
+    "file-loader": "^5.0.2",
     "html-webpack-plugin": "^3.2.0",
     "http-proxy-middleware": "^0.20.0",
     "ignore-loader": "^0.1.2",
     "isomorphic-style-loader": "^5.1.0",
+    "less": "^3.12.2",
+    "less-loader": "^7.1.0",
     "memory-fs": "^0.5.0",
     "mini-css-extract-plugin": "^0.8.0",
     "node-sass": "^4.13.0",
@@ -62,6 +67,7 @@
     "ts-loader": "^6.2.1",
     "ts-node": "^8.5.4",
     "typescript": "^3.7.2",
+    "url-loader": "^3.0.0",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10",
     "webpack-dev-server": "^3.9.0",

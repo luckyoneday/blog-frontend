@@ -3,9 +3,10 @@ import Create from "@pages/create/index"
 import User from "@pages/user/index"
 
 const routes = [
-  { path: "/create", component: Create, exact: true },
-  { path: "/user", component: User, exact: true },
-  { path: "/home", component: Home, exact: true }
+  { path: "/", component: Home, exact: true },
+  { path: "/create", component: Create },
+  { path: "/user", component: User },
+  { path: "/home", component: Home }
 ]
 
 export default routes

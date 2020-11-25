@@ -5,10 +5,7 @@ export interface ResponseProps {
   data: any
 }
 
-export interface LoginSessionProps {
-  success: boolean
-  message: string
-  code?: number
+export interface LoginSessionProps extends ResponseProps {
   data: {
     isLogin: boolean
     count: number

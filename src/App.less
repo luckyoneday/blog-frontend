@@ -1,7 +1,8 @@
-@import "~antd/dist/antd.css";
+@import "~antd/dist/antd.less";
 * {
   box-sizing: border-box;
 }
+
 body {
   margin: 0;
   padding: 0;
@@ -9,19 +10,24 @@ body {
   height: 100%;
   background: #f1f1f1;
 }
+
 #root {
   height: 100%;
 }
+
 #oneday-blog-nav {
   height: 65px;
 }
+
 #oneday-blog-body {
-  width: 1280px;
+  width: calc(100% - 160px);
+  min-width: 1280px;
   min-height: calc(100% - 130px);
   margin: 0 auto;
   padding: 24px;
   background: #ffffff;
 }
+
 #oneday-blog-footer {
   text-align: center;
   line-height: 65px;

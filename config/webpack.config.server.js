@@ -1,10 +1,10 @@
 const merge = require("webpack-merge")
+const process = require("process")
+const webpack = require('webpack')
 const nodeExternals = require("webpack-node-externals")
 const path = require("path")
 
 const baseConfig = require("./webpack.config.base")
-
-const isProd = process.env.NODE_ENV === "production"
 
 const config = merge(baseConfig, {
   entry: "./server/index.tsx",
@@ -21,41 +21,41 @@ const config = merge(baseConfig, {
       {
         test: /\.css$/,
         loader: "ignore-loader"
+      },
+      {
+        test: /\.less$/,
+        loader: "ignore-loader"
+      },
+      {
+        test: /\.module.scss$/,
+        exclude: /node_modules/,
+        use: [
+          "isomorphic-style-loader",
+          {
+            loader: "css-loader",
+            options: {
+              importLoaders: 1,
+              modules: {
+                localIdentName: "[name]__[local]-[hash:base64:6]"
+              }
+            }
+          },
+          {
+            loader: "postcss-loader",
+            options: {
+              ident: "postcss",
+              plugins: [require("autoprefixer")]
+            }
+          },
+          "sass-loader"
+        ]
       }
     ]
-  }
+  },
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env.REACT_ENV': '"server"',
+    })
+  ]
 })
-
-if (isProd) {
-  config.module.rules.push({
-    test: /\.module.scss$/,
-    exclude: /node_modules/,
-    use: [
-      "isomorphic-style-loader",
-      {
-        loader: "css-loader",
-        options: {
-          importLoaders: 1,
-          modules: {
-            localIdentName: "[name]__[local]-[hash:base64:6]"
-          }
-        }
-      },
-      {
-        loader: "postcss-loader",
-        options: {
-          ident: "postcss",
-          plugins: [require("autoprefixer")]
-        }
-      },
-      "sass-loader"
-    ]
-  })
-} else {
-  config.module.rules.push({
-    test: /\.module.scss$/,
-    loader: "ignore-loader"
-  })
-}
-
 module.exports = config

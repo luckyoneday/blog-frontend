@@ -8,21 +8,20 @@ import * as ReactDOMServer from "react-dom/server"
 import * as fs from "fs"
 import * as process from "process"
 import App from "../src/App"
-// const devStatic = require("./dev-static")
 
-// const isProd = process.env.NODE_ENV === "production"
 interface ContextProps extends StaticRouterContext {
   css: Array<any>
 }
 
-const template = fs.readFileSync(process.cwd() + "/dist/index.html", "utf-8")
-
 const PORT = 4555
 const app = new Koa()
+
+const template = fs.readFileSync(process.cwd() + "/dist/index.html", "utf-8")
 const router = new Router()
 
 router.get("*", async (ctx: Koa.Context) => {
   const context: ContextProps = { css: [] }
+
   const content = ReactDOMServer.renderToString(
     <StaticRouter context={context} location={ctx.request.url}>
       <App staticContext={context} />
@@ -40,12 +39,8 @@ router.get("*", async (ctx: Koa.Context) => {
   ctx.type = "html"
 })
 
-// if (isProd) {
 app.use(Static("dist"))
 app.use(router.routes())
-// } else {
-//   devStatic(app)
-// }
 
 app.listen(PORT)
 console.log("app is listening at port" + PORT)

@@ -1,10 +1,9 @@
 # blog-frontend
 
-## 启动项目
+## dev
 
 ```js
-npm run build
-npm start
+npm run dev
 ```
 
-本地打开 localhost:4555
+本地打开 localhost:8080

@@ -17,39 +17,49 @@ const config = merge(baseConfig, {
   target: "web",
   output: {
     path: path.resolve(__dirname, "../dist"),
-    filename: "[name]_[hash].js"
+    filename: "static/js/[name]_[hash].js"
   },
   module: {
     rules: [
       {
-        test: /\.css$/,
-        include: ["/node_modules/antd/*", path.resolve(__dirname, "../src")],
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader
-          },
-          "css-loader",
-          {
-            loader: "postcss-loader",
-            options: {
-              ident: "postcss",
-              plugins: [require("autoprefixer")]
-            }
+        test: /\.less$/,
+        use: [{
+          loader: MiniCssExtractPlugin.loader
+        }, {
+          loader: 'css-loader', 
+        },  {
+          loader: "postcss-loader",
+          options: {
+            ident: "postcss",
+            plugins: [require("autoprefixer")]
           }
-        ]
-      }
+        }, {
+          loader: 'less-loader', 
+          options: {
+            lessOptions: {
+              modifyVars: {
+                'primary-color': '#ff9c6e',
+              },
+              javascriptEnabled: true,
+            },
+          },
+        }]
+      },
     ]
   },
 
   plugins: [
     new MiniCssExtractPlugin({
-      filename: "[name].css"
+      filename: "static/css/[name].css"
     }),
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       template: "./public/index.html",
       favicon: "./public/favicon.ico"
-    })
+    }),
+    new webpack.DefinePlugin({
+      'process.env.REACT_ENV': '"client"',
+  })
   ]
 })
 
@@ -66,6 +76,7 @@ if (isProd) {
   config.devtool = "cheap-inline-source-map"
   config.devServer = {
     hot: true,
+    historyApiFallback:true,
     contentBase: "./dist",
     overlay: {
       errors: true

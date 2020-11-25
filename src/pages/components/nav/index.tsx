@@ -1,7 +1,6 @@
 import * as React from "react"
-import { Menu, message, Modal } from "antd"
+import { Menu, message, Modal, Button } from "antd"
 import { Link, useLocation } from "react-router-dom"
-import { ClickParam } from "antd/lib/menu"
 import axios from "@utils/axios"
 import Api from "@api/index"
 import { ResponseProps } from "@interface/index"
@@ -52,18 +51,27 @@ function NavComponent() {
   return (
     <header className={Styles.header}>
       <div className={Styles.middleBlock}>
-        <div className={Styles.logo}>oneday</div>
+        <div className={Styles.logo}>youting</div>
         <Menu
           mode="horizontal"
           selectedKeys={route}
           className={Styles.menu}
-          onClick={(e: ClickParam) => {
+          onClick={e => {
             setRoute([e.key])
           }}
         >
           <Menu.Item key="/home">
             <Link to="/">首页</Link>
           </Menu.Item>
+          {user.isLogin ? (
+            <Button
+              onClick={() => {
+                window.open("/create")
+              }}
+            >
+              创建文章
+            </Button>
+          ) : null}
           {user.isLogin ? (
             <Menu.SubMenu title="我的">
               <Menu.Item key="/user">
@@ -76,6 +84,7 @@ function NavComponent() {
           ) : (
             <>
               <span
+                className={Styles.handle}
                 onClick={() => {
                   setModalShow(true)
                   setModalType("login")
@@ -84,6 +93,7 @@ function NavComponent() {
                 登录
               </span>
               <span
+                className={Styles.handle}
                 onClick={() => {
                   setModalShow(true)
                   setModalType("signUp")

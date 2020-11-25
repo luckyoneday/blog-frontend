@@ -21,16 +21,19 @@ class LoginPage extends React.Component<IFormProps> {
   }
   handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     const { modalType, onHide } = this.props
-    const methodName = modalType === "login" ? "login" : "signUp"
+    const isLogin = modalType === "login"
+    const methodName = isLogin ? "login" : "signUp"
     e.preventDefault()
     this.props.form.validateFields((err, values) => {
       if (!err) {
         Api[methodName](values)
           .then((res: AxiosResponse<ResponseProps>) => {
             if (res.data.success) {
-              message.success("登录成功", 1, () => {
-                onHide()
-                window && window.location.replace("/")
+              message.success(isLogin ? "登录成功" : "注册成功，去登录", 1, () => {
+                if (isLogin) {
+                  onHide()
+                  window.location.href = "/home"
+                } else this.props.onChangeModalType("login")
               })
             }
           })
