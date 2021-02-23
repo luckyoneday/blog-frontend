@@ -1,7 +1,7 @@
 import * as React from "react"
 import { StaticRouterContext, Redirect } from "react-router"
 import { Switch, Route } from "react-router-dom"
-import Nav from "./pages/components/nav"
+import Nav from "./components/nav"
 import routes from "./routes"
 import "./App.less"
 
@@ -20,7 +20,7 @@ export default function App(props: AppProps) {
             </div>
           ) : null}
           <div id="oneday-blog-body">{<item.component staticContext={props.staticContext} />}</div>
-          <div id="oneday-blog-footer">oneday blog @2019 by 武当王也</div>
+          <div id="oneday-blog-footer">oneday blog @2021 by 武当王也</div>
         </Route>
       ))}
       <Redirect to="/home" />

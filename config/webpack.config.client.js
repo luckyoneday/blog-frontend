@@ -22,6 +22,14 @@ const config = merge(baseConfig, {
   module: {
     rules: [
       {
+        test: /\.css$/,
+        use: [{
+          loader: MiniCssExtractPlugin.loader
+        }, {
+          loader: 'css-loader', 
+        }]
+      },
+      {
         test: /\.less$/,
         use: [{
           loader: MiniCssExtractPlugin.loader

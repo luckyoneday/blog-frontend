@@ -57,7 +57,7 @@ function NavComponent() {
           selectedKeys={route}
           className={Styles.menu}
           onClick={e => {
-            setRoute([e.key])
+            setRoute([e.key as string])
           }}
         >
           <Menu.Item key="/home">
