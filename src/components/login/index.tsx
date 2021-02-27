@@ -25,7 +25,7 @@ function LoginPage(props: IFormProps) {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     const isLogin = modalType === "login"
     const methodName = isLogin ? "login" : "signUp"
-    e.preventDefault()
+
     form.validateFields().then(values => {
       Api[methodName](values)
         .then((res: AxiosResponse<ResponseProps>) => {
@@ -56,13 +56,13 @@ function LoginPage(props: IFormProps) {
     >
       <div className={Styles.formSection}>
         <Form onFinish={handleSubmit} className={Styles.form} form={form}>
-          <Form.Item name="username" rules={[{ required: true, message: "请输入用户名!" }]}>
+          <Form.Item name="userName" rules={[{ required: true, message: "请输入用户名!" }]}>
             <Input
               prefix={<UserOutlined style={{ color: "rgba(0,0,0,.25)" }} />}
               placeholder="用户名"
             />
           </Form.Item>
-          <Form.Item name="password" rules={[{ required: true, message: "请输入密码!" }]}>
+          <Form.Item name="passWord" rules={[{ required: true, message: "请输入密码!" }]}>
             <Input
               prefix={<LockOutlined style={{ color: "rgba(0,0,0,.25)" }} />}
               type="password"

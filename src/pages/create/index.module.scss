@@ -1,47 +1,36 @@
 .wrap {
   .header {
+    position: sticky;
+    top: -10px;
+    z-index: 101;
     border-bottom: 1px solid #d9d9d9;
+    background: #fff;
   }
 
   .article {
     display: flex;
   }
 
-  .create,
-  .preview {
-    flex: 1;
-    width: 50%;
-  }
-
   .create {
-    padding-right: 10px;
+    flex: 1;
   }
 
   .preview {
-    padding-left: 10px;
+    width: 620px;
+  }
+
+  .divide {
+    width: 10px;
     border-left: 1px solid #d9d9d9;
+
+    &:hover {
+      resize: horizontal;
+      cursor: col-resize;
+    }
   }
 
   .contentPart {
     width: 100%;
-
-    pre {
-      position: relative;
-    }
-
-    .lang-name {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-    }
-  }
-}
-
-.line-numbers-rows {
-  position: absolute;
-  left: 4px;
-
-  .line-number {
-    color: #657b8390;
+    max-height: calc(100% - 130px);
   }
 }

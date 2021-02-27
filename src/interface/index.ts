@@ -7,9 +7,6 @@ export interface ResponseProps {
 
 export interface LoginSessionProps extends ResponseProps {
   data: {
-    isLogin: boolean
-    count: number
-    userId: number
     userName: string
   }
 }

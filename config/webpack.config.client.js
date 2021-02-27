@@ -86,6 +86,19 @@ if (isProd) {
     hot: true,
     historyApiFallback:true,
     contentBase: "./dist",
+    proxy: {
+      "/upload": {
+        target: "https://img.rruu.net",
+        pathRewrite: {"^/upload/image": "/api/upload"},
+        changeOrigin: true,
+        secure: false
+      },
+      "/api": {
+        target: "http://localhost:2333",
+        pathRewrite: { "^/api": "" },
+        changeOrigin: true,
+      }
+    },
     overlay: {
       errors: true
     }

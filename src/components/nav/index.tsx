@@ -1,7 +1,6 @@
 import * as React from "react"
 import { Menu, message, Modal, Button } from "antd"
 import { Link, useLocation } from "react-router-dom"
-import axios from "@utils/axios"
 import Api from "@api/index"
 import { ResponseProps } from "@interface/index"
 import FormModal from "../login"
@@ -16,17 +15,19 @@ function NavComponent() {
   const [route, setRoute] = useState([location])
   const [modalShow, setModalShow] = useState(false)
   const [modalType, setModalType] = useState("login")
-  const [user, setUser] = useState({ userId: 0, userName: "", isLogin: false })
+  const [user, setUser] = useState({ userName: "", isLogin: false })
 
   useEffect(() => {
-    axios
-      .get("/userInfo")
-      .then((res: { data: ResponseProps; status: number }) => {
-        if (res.status === 200 && res.data.success) {
-          setUser(res.data.data)
-        }
-      })
-      .catch(console.log)
+    const isLogin = sessionStorage.getItem("isLogin")
+    if (isLogin) {
+      Api.getUserInfo()
+        .then((res: { data: ResponseProps; status: number }) => {
+          if (res.status === 200 && res.data.success) {
+            setUser({ userName: res.data.data.userName, isLogin: true })
+          }
+        })
+        .catch(console.log)
+    }
   }, [])
 
   const handleLogout = () => {
@@ -84,6 +85,7 @@ function NavComponent() {
           ) : (
             <>
               <span
+                key="login"
                 className={Styles.handle}
                 onClick={() => {
                   setModalShow(true)
@@ -93,6 +95,7 @@ function NavComponent() {
                 登录
               </span>
               <span
+                key="sign"
                 className={Styles.handle}
                 onClick={() => {
                   setModalShow(true)

@@ -1,0 +1,52 @@
+.parsed {
+  line-height: 1.5em;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin-bottom: 1em;
+  }
+
+  p {
+    margin-bottom: 1.5em;
+  }
+
+  h1 {
+    font-size: 1.8em !important;
+  }
+
+  pre {
+    position: relative;
+    padding: 5px 10px 10px 30px;
+    margin-bottom: 1.5em;
+
+    .first-line {
+      text-align: right;
+
+      b {
+        color: #657b8390;
+      }
+    }
+
+    .line-numbers-rows {
+      position: absolute;
+      left: 4px;
+
+      .line-number {
+        color: #657b8390;
+      }
+    }
+  }
+
+  blockquote {
+    border-left: 3px solid #657b8366;
+    padding-left: 1em;
+  }
+
+  a:hover {
+    border-bottom: 1px solid #ff9c6e !important;
+  }
+}
