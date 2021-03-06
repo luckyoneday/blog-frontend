@@ -18,7 +18,8 @@ if ((module as any).hot) {
   })
 }
 
-ReactDOM.hydrate(
+const renderMethod = (module as any).hot ? ReactDOM.render : ReactDOM.hydrate
+renderMethod(
   <BrowserRouter>
     <App staticContext={null} />
   </BrowserRouter>,

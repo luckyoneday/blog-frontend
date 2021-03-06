@@ -1,9 +1,10 @@
 import * as React from "react"
-import { AxiosResponse } from "axios"
-import { ResponseProps } from "@interface/index"
-import Api from "@api/index"
 import { Form, Input, Button, message, Modal } from "antd"
 import { UserOutlined, LockOutlined } from "@ant-design/icons"
+
+import { ResponseProps } from "@interface/index"
+import Api from "@api/index"
+
 import Styles from "./index.module.scss"
 
 const { useEffect } = React
@@ -28,12 +29,12 @@ function LoginPage(props: IFormProps) {
 
     form.validateFields().then(values => {
       Api[methodName](values)
-        .then((res: AxiosResponse<ResponseProps>) => {
-          if (res.data.success) {
+        .then(res => {
+          if (res.success) {
             message.success(isLogin ? "登录成功" : "注册成功，去登录", 1, () => {
               if (isLogin) {
                 onHide()
-                window.location.href = "/home"
+                location.href = "/home"
               } else onChangeModalType("login")
             })
           }

@@ -1,0 +1,14 @@
+.listItem {
+  padding: 12px;
+  border-top: #f0f0f0 1px solid;
+  border-bottom: #f0f0f0 1px solid;
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .empty {
+    color: rgba(0, 0, 0, 0.6);
+  }
+}

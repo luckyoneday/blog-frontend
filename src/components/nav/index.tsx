@@ -1,8 +1,9 @@
 import * as React from "react"
 import { Menu, message, Modal, Button } from "antd"
 import { Link, useLocation } from "react-router-dom"
+
 import Api from "@api/index"
-import { ResponseProps } from "@interface/index"
+import DraftApi from "@api/draft"
 import FormModal from "../login"
 import WithStylesHoc from "../withStylesHOC"
 import Styles from "./index.module.scss"
@@ -21,9 +22,9 @@ function NavComponent() {
     const isLogin = sessionStorage.getItem("isLogin")
     if (isLogin) {
       Api.getUserInfo()
-        .then((res: { data: ResponseProps; status: number }) => {
-          if (res.status === 200 && res.data.success) {
-            setUser({ userName: res.data.data.userName, isLogin: true })
+        .then(res => {
+          if (res.success && res.data) {
+            setUser({ userName: res.data.userName, isLogin: true })
           }
         })
         .catch(console.log)
@@ -37,16 +38,28 @@ function NavComponent() {
       cancelText: "取消",
       onOk: () => {
         Api.logout()
-          .then((res: { data: ResponseProps; status: number }) => {
-            if (res.status === 200 && res.data.success) {
+          .then(res => {
+            if (res.success) {
               message.success("退出登录成功", 1, () => {
-                window && window.location.replace("/")
+                window && window.location.replace("/home")
               })
             }
           })
           .catch(console.error)
       }
     })
+  }
+
+  const handleCreateDraft = async () => {
+    try {
+      const res = await DraftApi.create({ title: "", content: "" })
+      if (res.success) {
+        const hash = res.data.draftHash
+        window.open(`/create/${hash}`)
+      }
+    } catch (e) {
+      message.error("创建失败，请稍后重试" + e)
+    }
   }
 
   return (
@@ -62,17 +75,11 @@ function NavComponent() {
           }}
         >
           <Menu.Item key="/home">
-            <Link to="/">首页</Link>
+            <Link to="/home">首页</Link>
           </Menu.Item>
-          {user.isLogin ? (
-            <Button
-              onClick={() => {
-                window.open("/create")
-              }}
-            >
-              创建文章
-            </Button>
-          ) : null}
+          <Menu.Item>
+            {user.isLogin ? <Button onClick={handleCreateDraft}>创建文章</Button> : null}
+          </Menu.Item>
           {user.isLogin ? (
             <Menu.SubMenu title="我的">
               <Menu.Item key="/user">
@@ -84,7 +91,7 @@ function NavComponent() {
             </Menu.SubMenu>
           ) : (
             <>
-              <span
+              <Menu.Item
                 key="login"
                 className={Styles.handle}
                 onClick={() => {
@@ -93,8 +100,8 @@ function NavComponent() {
                 }}
               >
                 登录
-              </span>
-              <span
+              </Menu.Item>
+              <Menu.Item
                 key="sign"
                 className={Styles.handle}
                 onClick={() => {
@@ -103,7 +110,7 @@ function NavComponent() {
                 }}
               >
                 注册
-              </span>
+              </Menu.Item>
             </>
           )}
         </Menu>

@@ -16,6 +16,7 @@ const config = merge(baseConfig, {
   mode: process.env.NODE_ENV,
   target: "web",
   output: {
+    publicPath: '/',
     path: path.resolve(__dirname, "../dist"),
     filename: "static/js/[name]_[hash].js"
   },
@@ -35,7 +36,7 @@ const config = merge(baseConfig, {
           loader: MiniCssExtractPlugin.loader
         }, {
           loader: 'css-loader', 
-        },  {
+        }, {
           loader: "postcss-loader",
           options: {
             ident: "postcss",
@@ -67,7 +68,7 @@ const config = merge(baseConfig, {
     }),
     new webpack.DefinePlugin({
       'process.env.REACT_ENV': '"client"',
-  })
+    })
   ]
 })
 

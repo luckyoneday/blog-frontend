@@ -4,7 +4,7 @@ import User from "@pages/user/index"
 
 const routes = [
   { path: "/", component: Home, exact: true },
-  { path: "/create", component: Create },
+  { path: "/create/:hash", component: Create, exact: true },
   { path: "/user", component: User },
   { path: "/home", component: Home }
 ]

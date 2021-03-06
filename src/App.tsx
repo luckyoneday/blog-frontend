@@ -1,7 +1,7 @@
 import * as React from "react"
-import { StaticRouterContext, Redirect, useHistory } from "react-router"
+import { StaticRouterContext, Redirect } from "react-router"
 import { Switch, Route, useLocation } from "react-router-dom"
-import { needRedirectUrlSet, UNAUTHORIZED_CODE } from "@utils/axios"
+import { needRedirectUrl, UNAUTHORIZED_CODE } from "@utils/axios"
 
 import Api from "./api"
 import Nav from "./components/nav"
@@ -15,7 +15,6 @@ interface AppProps {
 
 export default function App(props: AppProps) {
   const location = useLocation()
-  const history = useHistory()
 
   const pageListener = async () => {
     if (!document.hidden) {
@@ -24,8 +23,11 @@ export default function App(props: AppProps) {
         sessionStorage.setItem("isLogin", "true")
       } catch (e) {
         sessionStorage.setItem("isLogin", "false")
-        if (needRedirectUrlSet.has(location.pathname) && e.code === UNAUTHORIZED_CODE) {
-          history.push("/home")
+        if (
+          needRedirectUrl.filter(t => location.pathname.includes(t)).length > 0 &&
+          e.code === UNAUTHORIZED_CODE
+        ) {
+          window.location.href = "/home"
         } else {
           console.log(e)
         }
@@ -35,10 +37,10 @@ export default function App(props: AppProps) {
 
   useEffect(() => {
     pageListener()
-    // document.addEventListener("visibilitychange", pageListener)
-    // return () => {
-    //   document.removeEventListener("visibilitychange", pageListener)
-    // }
+    document.addEventListener("visibilitychange", pageListener)
+    return () => {
+      document.removeEventListener("visibilitychange", pageListener)
+    }
   }, [location.pathname])
 
   return (

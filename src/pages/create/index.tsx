@@ -1,111 +1,86 @@
 import * as React from "react"
-import { Input, message, Button } from "antd"
+import { useParams } from "react-router-dom"
+import { message } from "antd"
+import { throttle } from "lodash"
+import dayjs from "dayjs"
 
-import Api from "@api/index"
+import DraftApi from "@api/draft"
 import WithStylesHoc from "@components/withStylesHOC"
-import MarkDownToHtml from "@components/mdToHtml"
+import CreateHeader from "@components/createPage/header"
 
 import Styles from "./index.module.scss"
+import CreateContent from "@components/createPage/content"
 
 const { useEffect, useState, useRef } = React
-const { TextArea } = Input
 
-function WritePage(props: any) {
-  const [value, setValue] = useState("")
-  const previewNodeRef = useRef<any>(null)
-  const dragPosRef = useRef({ startPos: 0, width: 0 })
-  const textareaPosRef = useRef(0)
+function WritePage() {
+  const hash = useParams() as { hash: string }
+  const draftHash = hash.hash || ""
+
+  const [title, setTitle] = useState("")
+  const [content, setContent] = useState("")
+  const [saveTime, setSaveTime] = useState("")
+  const titleRef = useRef("")
+  const contentRef = useRef("")
+
+  titleRef.current = title
+  contentRef.current = content
 
   useEffect(() => {
-    document.addEventListener("mousemove", mouseMoveHandler)
-    document.addEventListener("mouseup", mouseUpHandler)
-    return () => {
-      document.removeEventListener("mousemove", mouseMoveHandler)
-      document.removeEventListener("mouseup", mouseUpHandler)
-    }
-  }, [])
-
-  const dropHandler = (e: React.DragEvent) => {
-    e.preventDefault()
-    textareaPosRef.current = (e.target as any).selectionStart
-
-    const fileList = e.dataTransfer?.files || []
-    if (fileList.length === 0) return
-    if (fileList.length > 1) return message.error("单次仅允许上传一个文件")
-    const file = fileList[0]
-    if (file.type?.indexOf("image") === -1) return message.error("仅允许上传图片文件")
-
-    const formData = new FormData()
-    formData.append("image", file)
-    // formData.append("token", "2d2df3673fb4ff7d82b15e2ce0c65c1b")
-    formData.append("apiType", "ali")
-
-    Api.uploadImage(formData).then(res => {
-      if (res && res.ali) {
-        const newData =
-          value.slice(0, textareaPosRef.current) +
-          `\n ![](${res.ali}) \n` +
-          value.slice(textareaPosRef.current, value.length)
-        setValue(newData)
+    if (!draftHash) location.href = "/home"
+    DraftApi.getDetail({ draftHash }).then(res => {
+      if (res.message && res.data) {
+        setTitle(res.data?.title || "")
+        setContent(res.data?.content || "")
       }
     })
-  }
+  }, [draftHash])
 
-  const mouseDownHandler = (e: React.MouseEvent) => {
-    dragPosRef.current.startPos = e.clientX
-    if (previewNodeRef.current) {
-      const currentWidth = previewNodeRef.current.getBoundingClientRect()?.width || 0
-      dragPosRef.current.width = currentWidth
+  const saveHandler = async (click: boolean) => {
+    const params = { title: titleRef.current, content: contentRef.current, draftHash }
+    try {
+      const res = await DraftApi.update(params)
+
+      if (res.success) {
+        if (click) message.success("保存草稿成功")
+        setSaveTime(dayjs().format("MM:DD HH:mm"))
+      }
+    } catch (error) {
+      message.error(error.message ?? "服务器开小差了，请稍后重试")
     }
   }
 
-  const mouseMoveHandler = (e: any) => {
-    if (dragPosRef.current.startPos === 0) return
-
-    if (previewNodeRef.current) {
-      const diff = e.clientX - dragPosRef.current.startPos
-      previewNodeRef.current.style.width = dragPosRef.current.width - diff + "px"
-    }
-  }
-
-  const mouseUpHandler = () => {
-    dragPosRef.current.startPos = 0
-  }
+  const autoSave = React.useCallback(
+    throttle(
+      async () => {
+        setSaveTime(dayjs().format("MM:DD HH:mm"))
+        await saveHandler(false)
+      },
+      5000,
+      { leading: false }
+    ),
+    []
+  )
 
   return (
     <section className={Styles.wrap}>
-      <div className={Styles.header}>
-        <div className={Styles.leftTitle}>
-          <Input size="large" placeholder="请输入文章名称" bordered={false} />
-        </div>
-        <div className={Styles.rightSave}>
-          <span className={Styles.autoSave}>已于{}自动存为草稿</span>
-          <Button>保存草稿</Button>
-          <Button type="primary">发布文章</Button>
-        </div>
-      </div>
-      <div className={Styles.article}>
-        <div className={Styles.create}>
-          <div className={Styles.contentPart}>
-            <TextArea
-              bordered={false}
-              autoSize={{ minRows: 23 }}
-              value={value}
-              placeholder="请输入文章内容"
-              onChange={e => setValue(e.target.value)}
-              onDrop={dropHandler}
-            ></TextArea>
-          </div>
-        </div>
-        <div className={Styles.divide} onMouseDown={mouseDownHandler}>
-          <div className={Styles.line}></div>
-        </div>
-        <div className={Styles.preview} ref={node => (previewNodeRef.current = node)}>
-          <div className={Styles.contentPart}>
-            <MarkDownToHtml inputValue={value} />
-          </div>
-        </div>
-      </div>
+      <CreateHeader
+        title={title}
+        onChange={title => {
+          setTitle(title)
+          autoSave()
+        }}
+        saveTime={saveTime}
+        onSave={() => saveHandler(true)}
+        onPublish={() => {}}
+      />
+      <CreateContent
+        content={content}
+        onChange={(content: string) => {
+          setContent(content)
+          autoSave()
+        }}
+      />
     </section>
   )
 }
