@@ -1,9 +1,9 @@
 import * as React from "react"
 import markdownIt from "markdown-it"
 import hljs from "highlight.js"
-import "highlight.js/styles/solarized-light.css"
 import DOMPurify from "dompurify"
 import Styles from "./index.module.scss"
+import "./highlight.css"
 
 function MarkDownToHtml({ inputValue }: { inputValue: string }) {
   const md = new markdownIt({

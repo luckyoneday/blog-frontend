@@ -37,16 +37,16 @@ export default function App(props: AppProps) {
 
   useEffect(() => {
     pageListener()
-    document.addEventListener("visibilitychange", pageListener)
-    return () => {
-      document.removeEventListener("visibilitychange", pageListener)
-    }
+    // document.addEventListener("visibilitychange", pageListener)
+    // return () => {
+    //   document.removeEventListener("visibilitychange", pageListener)
+    // }
   }, [location.pathname])
 
   return (
     <Switch>
       {routes.map((item, index) => {
-        const noNavPage = item.path.indexOf("/create") === -1
+        const noNavPage = item.path.indexOf("/edit") === -1
 
         return (
           <Route path={item.path} key={index} exact={item.exact}>

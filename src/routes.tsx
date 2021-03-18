@@ -1,12 +1,14 @@
 import Home from "@pages/home/index"
-import Create from "@pages/create/index"
+import Edit from "@pages/edit/index"
 import User from "@pages/user/index"
+import Detail from "@pages/detail/index"
 
 const routes = [
   { path: "/", component: Home, exact: true },
-  { path: "/create/:hash", component: Create, exact: true },
   { path: "/user", component: User },
-  { path: "/home", component: Home }
+  { path: "/home", component: Home },
+  { path: "/edit/:hash", component: Edit, exact: true },
+  { path: "/detail/:hash", component: Detail, exact: true }
 ]
 
 export default routes

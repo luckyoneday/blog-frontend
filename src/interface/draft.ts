@@ -4,14 +4,16 @@ export interface DraftDetailItem {
   draftHash: string
   title: string
   content: string
-  createAt: string
-  updateAt: string
+  articleHash?: string
+  createAt?: string
+  updateAt?: string
 }
 
 export namespace CreateDraftParams {
   export interface Request {
     title: string
     content: string
+    articleHash?: string
   }
 
   export interface Response extends ResponseProps {

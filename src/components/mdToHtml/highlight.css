@@ -1,0 +1,23 @@
+@import "~highlight.js/styles/solarized-light.css";
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-bottom: 1em;
+}
+
+p {
+  margin-bottom: 1.5em;
+}
+
+h1 {
+  font-size: 1.8em !important;
+}
+
+blockquote {
+  border-left: 3px solid #657b8366;
+  padding-left: 1em;
+}

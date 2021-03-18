@@ -5,7 +5,7 @@ import { ResponseProps } from "../interface"
 axios.defaults.withCredentials = true
 axios.defaults.timeout = 10000
 
-export const needRedirectUrl = ["/create", "/user"]
+export const needRedirectUrl = ["/edit", "/user"]
 export const UNAUTHORIZED_CODE = 40001
 export const homePageNeedCheckApi = ["/draft"]
 

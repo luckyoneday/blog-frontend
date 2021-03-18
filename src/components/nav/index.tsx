@@ -55,7 +55,7 @@ function NavComponent() {
       const res = await DraftApi.create({ title: "", content: "" })
       if (res.success) {
         const hash = res.data.draftHash
-        window.open(`/create/${hash}`)
+        window.open(`/edit/${hash}`)
       }
     } catch (e) {
       message.error("创建失败，请稍后重试" + e)
@@ -74,11 +74,11 @@ function NavComponent() {
             setRoute([e.key as string])
           }}
         >
+          <Menu.Item key="1">
+            {user.isLogin ? <Button onClick={handleCreateDraft}>创建文章</Button> : null}
+          </Menu.Item>
           <Menu.Item key="/home">
             <Link to="/home">首页</Link>
-          </Menu.Item>
-          <Menu.Item>
-            {user.isLogin ? <Button onClick={handleCreateDraft}>创建文章</Button> : null}
           </Menu.Item>
           {user.isLogin ? (
             <Menu.SubMenu title="我的">

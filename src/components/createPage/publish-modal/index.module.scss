@@ -1,0 +1,15 @@
+.formSection {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .form {
+    margin-top: 16px;
+    width: 300px;
+
+    .publishBtn {
+      width: 100%;
+    }
+  }
+}

@@ -15,6 +15,10 @@ export default class Api {
     return get(`${prefix}/draft/detail`,  postData)
   }
 
+  static delete = (postData: DraftDetailParams.Request) => {
+    return post(`${prefix}/draft/delete`, postData)
+  }
+
   static getList = (): Promise<DraftListParam.Response> => {
     return get(`${prefix}/draft/list`)
   }

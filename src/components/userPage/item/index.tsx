@@ -2,6 +2,7 @@ import * as React from "react"
 import { Button, Popconfirm } from "antd"
 
 import { DraftDetailItem } from "@interface/draft"
+import { ArticleDetailItem } from "@interface/article"
 
 import Styles from "./index.module.scss"
 
@@ -13,17 +14,21 @@ function Item({ item, onDelete, onEdit }: ItemProps) {
     return firstP.slice(0, 50) + "..."
   }
 
+  const hash = (item as DraftDetailItem).draftHash
+    ? (item as DraftDetailItem).draftHash
+    : (item as ArticleDetailItem).articleHash
+
   return (
     <div className={Styles.listItem}>
       <h3 className={Styles.header}>
         <span>{item?.title || <span className={Styles.empty}>请输入标题</span>}</span>
         <span>
-          <Button type="link" onClick={() => onEdit(item.draftHash)}>
+          <Button type="link" onClick={() => onEdit(hash, item)}>
             编辑
           </Button>
           <Popconfirm
             title="确认删除?"
-            onConfirm={() => onDelete(item.draftHash)}
+            onConfirm={() => onDelete(hash, item)}
             onCancel={() => {}}
             okText="确认"
             cancelText="取消"
@@ -44,9 +49,9 @@ function Item({ item, onDelete, onEdit }: ItemProps) {
 }
 
 interface ItemProps {
-  item: DraftDetailItem
-  onEdit: (hash: string) => void
-  onDelete: (hash: string) => void
+  item: DraftDetailItem | ArticleDetailItem
+  onEdit: (hash: string, item: DraftDetailItem | ArticleDetailItem) => void
+  onDelete: (hash: string, item: DraftDetailItem | ArticleDetailItem) => void
 }
 
 export default Item
