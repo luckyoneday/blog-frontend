@@ -11,7 +11,7 @@ import Styles from "./index.module.scss"
 const { useEffect, useState } = React
 
 function UserDraft() {
-  const [draftList, setDraftList] = useState<ArticleDetailItem[]>([])
+  const [articleList, setArticleList] = useState<ArticleDetailItem[]>([])
 
   useEffect(() => {
     getList()
@@ -22,7 +22,7 @@ function UserDraft() {
       const res = await ArticleApi.getList()
 
       if (res.success && res.data) {
-        setDraftList(res.data.list)
+        setArticleList(res.data.list)
       }
     } catch (err) {
       message.error(err)
@@ -56,11 +56,11 @@ function UserDraft() {
 
   return (
     <section className={Styles.draft}>
-      {draftList.length === 0 ? (
+      {articleList.length === 0 ? (
         <div className={Styles.empty}>-- 暂无数据 --</div>
       ) : (
         <div className={Styles.listWrap}>
-          {draftList.map(d => (
+          {articleList.map(d => (
             <Item key={d.articleHash} item={d} onEdit={editHandler} onDelete={deleteHandler} />
           ))}
           <div className={Styles.noMore}>-- 加载完毕 --</div>

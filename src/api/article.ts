@@ -22,4 +22,8 @@ export default class Api {
   static getList = (): Promise<ArticleListParam.Response> => {
     return get(`${prefix}/article/list`)
   }
+
+  static getAllList = (): Promise<ArticleListParam.Response> => {
+    return get(`${prefix}/article/allList`)
+  }
 }

@@ -13,8 +13,6 @@ function UserPage(props: any) {
   const [tabKey, setTabKey] = useState("article")
   return (
     <section className={Styles.formSection}>
-      <div>这是用户页面</div>
-
       <Tabs onChange={setTabKey} activeKey={tabKey}>
         <TabPane tab="我的文章" key="article">
           <ArticleList />

@@ -8,6 +8,7 @@ function CreateHeader({ saveTime, title, onChange, onSave, onPublish }: CreateHe
     <div className={Styles.header}>
       <div className={Styles.leftTitle}>
         <Input
+          className={Styles.input}
           size="large"
           placeholder="请输入文章名称"
           bordered={false}

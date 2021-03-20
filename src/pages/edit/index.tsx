@@ -45,9 +45,9 @@ function WritePage() {
 
   const saveHandler = async (click: boolean) => {
     const params = {
+      ...docInfoRef.current,
       title: docInfoRef.current.title,
-      content: docInfoRef.current.content,
-      draftHash
+      content: docInfoRef.current.content
     }
     try {
       const res = await DraftApi.update(params)
@@ -62,14 +62,10 @@ function WritePage() {
   }
 
   const autoSave = React.useCallback(
-    throttle(
-      async () => {
-        setSaveTime(dayjs().format("MM:DD HH:mm:ss"))
-        await saveHandler(false)
-      },
-      5000,
-      { leading: false }
-    ),
+    throttle(async () => {
+      setSaveTime(dayjs().format("MM:DD HH:mm:ss"))
+      await saveHandler(false)
+    }, 5000),
     []
   )
 

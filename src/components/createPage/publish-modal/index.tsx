@@ -31,6 +31,7 @@ function PublishModal(props: IFormProps) {
       const res = await ArticleApi.getDetail({ articleHash: hash })
       if (res.success) {
         form.setFieldsValue({ cover: res.data?.cover, visibleStatus: res.data?.visibleStatus })
+        setFile([{ url: res.data?.cover, uid: "init", name: "cover.png", status: "done" }])
       }
     } catch (error) {
       message.error(error.message ?? "服务器开小差了，请稍后重试")
