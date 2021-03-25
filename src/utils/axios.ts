@@ -2,6 +2,7 @@ import axios, { AxiosResponse } from "axios"
 import { message } from "antd"
 import { ResponseProps } from "../interface"
 
+axios.defaults.baseURL = process.env.NODE_ENV === 'production' ? "http://localhost:2333": ''
 axios.defaults.withCredentials = true
 axios.defaults.timeout = 10000
 

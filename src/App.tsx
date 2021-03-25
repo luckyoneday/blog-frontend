@@ -11,6 +11,7 @@ import "./App.less"
 const { useEffect } = React
 interface AppProps {
   staticContext: StaticRouterContext | null
+  __onedayInitData__?: any
 }
 
 export default function App(props: AppProps) {
@@ -47,7 +48,6 @@ export default function App(props: AppProps) {
     <Switch>
       {routes.map((item, index) => {
         const noNavPage = item.path.indexOf("/edit") === -1
-
         return (
           <Route path={item.path} key={index} exact={item.exact}>
             {noNavPage ? (
@@ -56,7 +56,12 @@ export default function App(props: AppProps) {
               </div>
             ) : null}
             <div id={noNavPage ? "oneday-blog-body" : "oneday-blog-body-full"}>
-              {<item.component staticContext={props.staticContext} />}
+              {
+                <item.component
+                  staticContext={props.staticContext}
+                  __onedayInitData__={props.__onedayInitData__ ?? {}}
+                />
+              }
             </div>
             <div id="oneday-blog-footer">oneday blog @2021 by 武当王也</div>
           </Route>

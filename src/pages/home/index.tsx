@@ -1,33 +1,39 @@
 import * as React from "react"
 import { message } from "antd"
 import WithStylesHoc from "@components/withStylesHOC"
+import WithFetchHoc from "@components/withFetchHOC"
 import Item from "@components/homePage/item"
 
 import ArticleApi from "@api/article"
+import { BaseCompProps } from "@interface/index"
 import { ArticleDetailItem } from "@interface/article"
 
 import Styles from "./index.module.scss"
 
 const { useEffect, useState } = React
 
-function HomePage() {
-  const [articleList, setArticleList] = useState<ArticleDetailItem[]>([])
+function HomePage({ initData, ...otherProps }: HomePageProps) {
+  const { list = {} } = initData ?? {}
+
+  const [articleList, setArticleList] = useState<ArticleDetailItem[]>(list?.data?.list ?? [])
 
   useEffect(() => {
-    getList()
-  }, [])
+    if (list?.data?.list) setArticleList(list.data.list)
+  }, [list])
 
-  const getList = async () => {
-    try {
-      const res = await ArticleApi.getList()
+  // 考虑之后分页可以用
+  // const getList = async () => {
+  //   try {
+  //     const res = await ArticleApi.getAllList()
 
-      if (res.success && res.data) {
-        setArticleList(res.data.list)
-      }
-    } catch (err) {
-      message.error(err)
-    }
-  }
+  //     if (res.success && res.data) {
+  //       setArticleList(res.data.list)
+  //     }
+  //   } catch (err) {
+  //     message.error(err)
+  //   }
+  // }
+
   return (
     <section className={Styles.homeWrap}>
       {articleList.length === 0 ? (
@@ -35,7 +41,7 @@ function HomePage() {
       ) : (
         <div className={Styles.listWrap}>
           {articleList.map(d => (
-            <Item key={d.articleHash} item={d} />
+            <Item key={d.articleHash} {...otherProps} item={d} />
           ))}
           <div className={Styles.noMore}>-- 加载完毕 --</div>
         </div>
@@ -43,4 +49,10 @@ function HomePage() {
     </section>
   )
 }
-export default WithStylesHoc(HomePage, Styles)
+
+const options = {
+  list: async () => await ArticleApi.getAllList()
+}
+
+interface HomePageProps extends BaseCompProps {}
+export default WithFetchHoc(WithStylesHoc(HomePage, Styles), options)

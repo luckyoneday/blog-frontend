@@ -1,4 +1,4 @@
-import {post, get} from "@utils/axios"
+import axios, {post, get} from "@utils/axios"
 import { ResponseProps } from "@interface/index"
 
 interface FormProps {
@@ -29,7 +29,7 @@ export default class Api {
   }
 
   static uploadImage = (postData: any) => {
-    // return post(`/upload/image`, postData)
+    // return axios.post("https://img.rruu.net/api/upload", postData)
     return Promise.resolve({
       ali: "https://ae01.alicdn.com/kf/Uee395003121c453db5b9e1a30b6938372.jpg",
       distribute: "https://img.rruu.net/image/6038a7222e83c",

@@ -1,8 +1,9 @@
 import * as React from "react"
+import { BaseCompProps } from "@interface/index"
 
-export default function WithStylesHoc(Component: any, styles: any) {
-  return class NewComponent extends React.Component<{ staticContext: any }> {
-    constructor(props: { staticContext: any }) {
+export default function WithStylesHoc<T extends BaseCompProps>(Component: any, styles: any) {
+  class NewComponent extends React.Component<T> {
+    constructor(props: T) {
       super(props)
       if (this.props.staticContext) {
         const css = styles._getCss()
@@ -10,7 +11,16 @@ export default function WithStylesHoc(Component: any, styles: any) {
       }
     }
     render() {
+      // 这里的 props 都传下去，子组件可能会用到 staticContext 来获取样式
       return <Component {...this.props} />
     }
+
+    static loadData: () => Promise<void>
   }
+
+  if (Component.loadData) {
+    NewComponent.loadData = Component.loadData
+  }
+
+  return NewComponent
 }

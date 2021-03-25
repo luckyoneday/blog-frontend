@@ -6,7 +6,7 @@ import Detail from "@pages/detail/index"
 const routes = [
   { path: "/", component: Home, exact: true },
   { path: "/user", component: User },
-  { path: "/home", component: Home },
+  { path: "/home", component: Home, loadData: Home.loadData },
   { path: "/edit/:hash", component: Edit, exact: true },
   { path: "/detail/:hash", component: Detail, exact: true }
 ]

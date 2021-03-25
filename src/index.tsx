@@ -10,7 +10,7 @@ if ((module as any).hot) {
     ReactDOM.render(
       <AppContainer>
         <BrowserRouter>
-          <App staticContext={null} />
+          <App staticContext={null} __onedayInitData__={window.__ONEDAY_INIT_DATA__} />
         </BrowserRouter>
       </AppContainer>,
       root
@@ -21,7 +21,7 @@ if ((module as any).hot) {
 const renderMethod = (module as any).hot ? ReactDOM.render : ReactDOM.hydrate
 renderMethod(
   <BrowserRouter>
-    <App staticContext={null} />
+    <App staticContext={null} __onedayInitData__={window.__ONEDAY_INIT_DATA__} />
   </BrowserRouter>,
   root
 )

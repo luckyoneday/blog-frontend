@@ -1,7 +1,9 @@
 import * as React from "react"
 import { useHistory } from "react-router-dom"
+import WithStylesHoc from "@components/withStylesHOC"
 
 import { ArticleDetailItem } from "@interface/article"
+import { BaseCompProps } from "@interface/index"
 
 import Styles from "./index.module.scss"
 
@@ -40,8 +42,8 @@ function Item({ item }: ItemProps) {
   )
 }
 
-interface ItemProps {
+interface ItemProps extends BaseCompProps {
   item: ArticleDetailItem
 }
 
-export default Item
+export default WithStylesHoc<ItemProps>(Item, Styles)
