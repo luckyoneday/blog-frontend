@@ -1,5 +1,4 @@
 import * as React from "react"
-import { useHistory } from "react-router-dom"
 import WithStylesHoc from "@components/withStylesHOC"
 
 import { ArticleDetailItem } from "@interface/article"
@@ -8,8 +7,6 @@ import { BaseCompProps } from "@interface/index"
 import Styles from "./index.module.scss"
 
 function Item({ item }: ItemProps) {
-  const history = useHistory()
-
   const sliceContent = (content: string) => {
     const newContent = content.trim()
     const contentArr = newContent.split("\n")
@@ -17,15 +14,13 @@ function Item({ item }: ItemProps) {
     return firstP.slice(0, 50) + "..."
   }
 
-  const hash = (item as ArticleDetailItem).articleHash
-
   return (
     <div className={Styles.listItem}>
       <h3 className={Styles.header}>
         <span
           className={item.articleHash ? Styles.title : ""}
           onClick={() => {
-            item.articleHash ? history.push("/detail/" + item.articleHash) : () => {}
+            item.articleHash ? window.open("/detail/" + item.articleHash) : () => {}
           }}
         >
           {item?.title || <span className={Styles.empty}>请输入标题</span>}

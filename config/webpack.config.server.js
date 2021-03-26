@@ -11,6 +11,7 @@ const config = merge(baseConfig, {
   target: "node",
   mode: process.env.NODE_ENV,
   output: {
+    publicPath: '/',
     path: path.resolve(__dirname, "../dist"),
     libraryTarget: "commonjs2",
     filename: "server.bundle.js"

@@ -1,5 +1,4 @@
 import * as React from "react"
-import { useHistory } from "react-router-dom"
 import { Button, Popconfirm } from "antd"
 
 import { DraftDetailItem } from "@interface/draft"
@@ -8,7 +7,6 @@ import { ArticleDetailItem } from "@interface/article"
 import Styles from "./index.module.scss"
 
 function Item({ item, onDelete, onEdit }: ItemProps) {
-  const history = useHistory()
   const sliceContent = (content: string) => {
     const newContent = content.trim()
     const contentArr = newContent.split("\n")
@@ -26,7 +24,7 @@ function Item({ item, onDelete, onEdit }: ItemProps) {
         <span
           className={item.articleHash ? Styles.title : ""}
           onClick={() => {
-            item.articleHash ? history.push("/detail/" + item.articleHash) : () => {}
+            item.articleHash ? window.open("/detail/" + item.articleHash) : () => {}
           }}
         >
           {item?.title || <span className={Styles.empty}>请输入标题</span>}

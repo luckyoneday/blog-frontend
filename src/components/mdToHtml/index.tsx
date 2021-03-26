@@ -38,7 +38,9 @@ function MarkDownToHtml({ inputValue }: MdToHtmlProps) {
     }
   })
 
-  const html = DOMPurify.sanitize ? DOMPurify.sanitize(md.render(inputValue)) : ""
+  const html = DOMPurify.sanitize
+    ? DOMPurify.sanitize(md.render(inputValue))
+    : md.render(inputValue)
 
   return <div className={Styles.parsed} dangerouslySetInnerHTML={{ __html: html }}></div>
 }

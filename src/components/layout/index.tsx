@@ -9,8 +9,9 @@ interface LayoutProps extends AppProps {
   children: React.ReactNode
 }
 
+const noNavPageUrl = ["/edit"]
 export default function Layout(props: LayoutProps) {
-  const hasNavPage = props.path.indexOf("/edit") === -1
+  const hasNavPage = noNavPageUrl.filter(t => props.path.indexOf("t") === -1).length > 0
 
   return (
     <>
