@@ -1,42 +1,42 @@
 import * as React from "react"
-import { message } from "antd"
-import { useParams } from "react-router-dom"
 
 import ArticleApi from "@api/article"
 import { ArticleDetailItem } from "@interface/article"
 import WithStylesHoc from "@components/withStylesHOC"
 
-import styles from "./index.module.scss"
 import MarkDownToHtml from "@components/mdToHtml"
+import { BaseCompProps, OptionContextProps } from "@interface/index"
+import withFetchHOC from "@components/withFetchHOC"
+
+import styles from "./index.module.scss"
 
 const { useState, useEffect } = React
-function DetailPage() {
-  const hash = useParams() as { hash: string }
-  const articleHash = hash.hash || ""
 
-  const [detailInfo, setDetailInfo] = useState<ArticleDetailItem>({} as ArticleDetailItem)
+function DetailPage({ initData, ...otherProps }: DetailPageProps) {
+  const { detail = {} } = initData ?? {}
 
-  const getArticleDetail = async () => {
-    try {
-      const res = await ArticleApi.getDetail({ articleHash })
-      if (res && res.data) {
-        setDetailInfo(res.data)
-      }
-    } catch (e) {
-      message.warn(e.errorMsg ?? "服务器开小差了")
-    }
-  }
+  const [detailInfo, setDetailInfo] = useState<ArticleDetailItem>(detail?.data)
+
   useEffect(() => {
-    getArticleDetail()
-  }, [])
+    if (detail.data) setDetailInfo(detail.data)
+  }, [detail])
 
   return (
     <div className={styles.detailWrap}>
       {detailInfo?.cover ? <img src={detailInfo.cover} /> : null}
       <h1 className={styles.title}>{detailInfo?.title}</h1>
-      <MarkDownToHtml inputValue={detailInfo?.content || ""} />
+      <MarkDownToHtml inputValue={detailInfo?.content || ""} {...otherProps} />
     </div>
   )
 }
 
-export default WithStylesHoc(DetailPage, styles)
+const options = {
+  detail: async (context: OptionContextProps) => {
+    const params = context.hashParams
+    return await ArticleApi.getDetail({ articleHash: params.hash })
+  }
+}
+
+interface DetailPageProps extends BaseCompProps {}
+
+export default withFetchHOC(WithStylesHoc<DetailPageProps>(DetailPage, styles), options)

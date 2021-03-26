@@ -1,17 +1,19 @@
 import * as React from "react"
 import { StaticRouterContext, Redirect } from "react-router"
-import { Switch, Route, useLocation } from "react-router-dom"
+import { Switch, useLocation } from "react-router-dom"
+import { renderRoutes } from "react-router-config"
 import { needRedirectUrl, UNAUTHORIZED_CODE } from "@utils/axios"
+import { OptionContextProps, ServerDataProps } from "./interface"
 
 import Api from "./api"
-import Nav from "./components/nav"
 import routes from "./routes"
 import "./App.less"
 
 const { useEffect } = React
-interface AppProps {
+export interface AppProps {
   staticContext: StaticRouterContext | null
-  __onedayInitData__?: any
+  __onedayInitData__: ServerDataProps
+  __onedayInitContext__: OptionContextProps
 }
 
 export default function App(props: AppProps) {
@@ -46,27 +48,7 @@ export default function App(props: AppProps) {
 
   return (
     <Switch>
-      {routes.map((item, index) => {
-        const noNavPage = item.path.indexOf("/edit") === -1
-        return (
-          <Route path={item.path} key={index} exact={item.exact}>
-            {noNavPage ? (
-              <div id="oneday-blog-nav">
-                <Nav staticContext={props.staticContext} />
-              </div>
-            ) : null}
-            <div id={noNavPage ? "oneday-blog-body" : "oneday-blog-body-full"}>
-              {
-                <item.component
-                  staticContext={props.staticContext}
-                  __onedayInitData__={props.__onedayInitData__ ?? {}}
-                />
-              }
-            </div>
-            <div id="oneday-blog-footer">oneday blog @2021 by 武当王也</div>
-          </Route>
-        )
-      })}
+      {renderRoutes(routes, props)}
       <Redirect to="/home" />
     </Switch>
   )

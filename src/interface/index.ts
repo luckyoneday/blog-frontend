@@ -2,6 +2,14 @@ export interface InitDataProps {
   [key: string]: any
 }
 
+export interface OptionContextProps {
+  url: string
+  query: any
+  pathname: string
+  hashParams: any
+  context?: any
+}
+
 export interface ServerDataProps {
   [key: string]: {
     status: string
@@ -10,7 +18,7 @@ export interface ServerDataProps {
 }
 
 export interface OptionProps {
-  [key: string]: () => Promise<any>
+  [key: string]: (context: OptionContextProps) => Promise<any>
 }
 
 export interface BaseCompProps {

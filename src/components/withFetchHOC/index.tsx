@@ -1,9 +1,16 @@
 import * as React from "react"
-import { BaseCompProps, InitDataProps, OptionProps, ServerDataProps } from "@interface/index"
+import {
+  BaseCompProps,
+  InitDataProps,
+  OptionProps,
+  ServerDataProps,
+  OptionContextProps
+} from "@interface/index"
 import { transToInitData } from "./util"
 
 interface WithFetchProps extends BaseCompProps {
   __onedayInitData__: ServerDataProps
+  __onedayInitContext__: OptionContextProps
 }
 
 export default function withFetchHOC<T extends WithFetchProps>(
@@ -13,12 +20,12 @@ export default function withFetchHOC<T extends WithFetchProps>(
   return class App extends React.Component<T> {
     static loadData = { ...options }
 
-    state = { data: transToInitData(this.props.__onedayInitData__) } as {
+    state = { data: transToInitData(this.props.__onedayInitData__ ?? {}) } as {
       data: InitDataProps
     }
 
     reFetchData = async () => {
-      const initData = this.props.__onedayInitData__
+      const initData = this.props.__onedayInitData__ ?? {}
       delete window.__ONEDAY_INIT_DATA__
 
       const entries = Object.entries(options)
@@ -29,7 +36,8 @@ export default function withFetchHOC<T extends WithFetchProps>(
             if (initData[key]?.status === "done") {
               return Promise.resolve(initData[key].data)
             } else {
-              return await fetch()
+              const initContext = { ...this.props.__onedayInitContext__ } ?? {}
+              return await fetch(initContext)
             }
           })
         )
@@ -50,7 +58,7 @@ export default function withFetchHOC<T extends WithFetchProps>(
     }
 
     render() {
-      const { __onedayInitData__, ...otherProps } = this.props
+      const { __onedayInitData__, __onedayInitContext__, ...otherProps } = this.props
       return <Component {...otherProps} initData={this.state.data} />
     }
   }

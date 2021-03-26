@@ -4,8 +4,10 @@ import hljs from "highlight.js"
 import DOMPurify from "dompurify"
 import Styles from "./index.module.scss"
 import "./highlight.css"
+import WithStylesHoc from "@components/withStylesHOC"
+import { BaseCompProps } from "@interface/index"
 
-function MarkDownToHtml({ inputValue }: { inputValue: string }) {
+function MarkDownToHtml({ inputValue }: MdToHtmlProps) {
   const md = new markdownIt({
     highlight: function (str, lang) {
       let newLang = lang
@@ -41,4 +43,8 @@ function MarkDownToHtml({ inputValue }: { inputValue: string }) {
   return <div className={Styles.parsed} dangerouslySetInnerHTML={{ __html: html }}></div>
 }
 
-export default MarkDownToHtml
+interface MdToHtmlProps extends BaseCompProps {
+  inputValue: string
+}
+
+export default WithStylesHoc<MdToHtmlProps>(MarkDownToHtml, Styles)

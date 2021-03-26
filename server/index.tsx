@@ -2,13 +2,14 @@ import Koa from "koa"
 import Router from "koa-router"
 import * as React from "react"
 import { StaticRouterContext } from "react-router"
-import { StaticRouter, matchPath } from "react-router-dom"
+import { StaticRouter } from "react-router-dom"
+import { matchRoutes } from "react-router-config"
 import Static from "koa-static"
 import * as ReactDOMServer from "react-dom/server"
 import * as fs from "fs"
 import * as process from "process"
 
-import { InitDataProps } from "../src/interface/index"
+import { InitDataProps, OptionContextProps } from "../src/interface/index"
 import routes from "../src/routes"
 import App from "../src/App"
 
@@ -25,18 +26,27 @@ const router = new Router()
 router.get("*", async (ctx: Koa.Context) => {
   const context: ContextProps = { css: [] }
 
-  const currRoute = routes.find(r => matchPath(ctx.url, r))
-  console.log("currRoute", currRoute)
+  const { route: currRoute = {}, match } = matchRoutes(routes, ctx.url)?.[0] ?? {}
 
   let script = "<noscript>oneday ssr inject data</noscript>"
   let finalData = {}
-  if (currRoute && currRoute.loadData) {
+  const optContext: OptionContextProps = {
+    url: ctx.originalUrl ?? ctx.url,
+    query: ctx.query ?? {},
+    pathname: ctx.path ?? "",
+    hashParams: match?.params ?? {}
+    // context: ctx ?? {}
+  }
+
+  if (currRoute && currRoute.loadData && match) {
+    console.log("currRoute", currRoute, ctx.url, optContext)
     const loadData = currRoute.loadData
     const entries = Object.entries(loadData)
     const resArr = await Promise.all(
       entries.map(async ([_key, fetch]: [string, any]) => {
         try {
-          const singleRes = await fetch()
+          const singleRes = await fetch(optContext)
+
           return {
             status: "done",
             data: singleRes
@@ -61,7 +71,11 @@ router.get("*", async (ctx: Koa.Context) => {
 
   const content = ReactDOMServer.renderToString(
     <StaticRouter context={context} location={ctx.request.url}>
-      <App staticContext={context} __onedayInitData__={finalData} />
+      <App
+        staticContext={context}
+        __onedayInitData__={finalData}
+        __onedayInitContext__={optContext}
+      />
     </StaticRouter>
   )
 
